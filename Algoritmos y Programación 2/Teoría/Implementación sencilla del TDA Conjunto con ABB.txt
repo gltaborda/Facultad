@@ -1,0 +1,218 @@
+#include <iostream>
+using namespace std;
+
+class Nodoarbol
+{
+// La clase Nodoarbol implementa métodos get y set en su interfaz 
+// para la manipulación de los atributos privados
+public:
+Nodoarbol(int dato, Nodoarbol *i=0, Nodoarbol *d=0) {info=dato;izq=i;der=d;}
+int GetInfo(){return info;}
+Nodoarbol *GetIzq(){return izq;}
+Nodoarbol *GetDer(){return der;}
+void SetInfo(int n){info=n;}
+void SetIzq( Nodoarbol *i){izq=i;}
+void SetDer( Nodoarbol *d){der=d;}
+private:
+int info;
+Nodoarbol *izq;
+Nodoarbol *der;
+};
+
+class ABB
+{
+public:
+ABB() {root=0;}
+void Alta(int);
+bool Buscar(int) const;
+void Inorder() const;
+void Postorder() const;
+void Preorder() const;
+void Borrar(int dat);
+private:
+Nodoarbol *root;
+void Inord( Nodoarbol* ) const;
+void Preord( Nodoarbol* ) const;
+void Postord( Nodoarbol *) const;
+bool Vacio(Nodoarbol*  r) { return r==0; } 
+bool EsHoja(Nodoarbol* r)  { return !r->GetDer() && !r->GetIzq(); }
+};
+void ABB::Alta(int d)
+{
+if (! root) root= new Nodoarbol (d);
+else {
+Nodoarbol *aux=root;
+bool ready=false;
+while (!ready)
+{
+if (d<aux->GetInfo())
+{
+if(aux->GetIzq())
+aux=aux->GetIzq();
+else
+{
+aux->SetIzq(new Nodoarbol(d));
+
+ready=true;
+}
+}
+else
+{
+if(aux->GetDer())
+aux=aux->GetDer();
+else
+{
+aux->SetDer(new Nodoarbol(d));
+
+ready=true;
+}
+}
+}
+}
+}
+void ABB::Inord( Nodoarbol* n) const
+{
+if (n)
+{
+
+Inord(n->GetIzq());
+cout<<n->GetInfo()<<" ";
+Inord(n->GetDer());
+}
+}
+void ABB::Preord( Nodoarbol* n) const
+{
+if (n)
+{
+
+cout<<n->GetInfo()<<" ";
+Preord(n->GetIzq());
+Preord(n->GetDer());
+}
+}
+void ABB::Postord( Nodoarbol* n) const
+{
+if (n)
+{
+Postord(n->GetIzq());
+Postord(n->GetDer());
+
+cout<<n->GetInfo()<<" ";
+}
+}
+
+void ABB::Inorder() const
+{
+Inord(root);
+}
+void ABB::Preorder() const
+{
+Preord(root);
+}
+void ABB::Postorder() const
+{
+Postord(root);
+}
+bool ABB::Buscar(int d) const
+{
+Nodoarbol *aux= root;
+bool esta = false;
+while((!esta) && (aux))
+{
+if(d == aux->GetInfo()) esta=true;
+else if(d > aux->GetInfo()) aux = aux->GetDer();
+else if(d < aux->GetInfo()) aux = aux->GetIzq();
+}
+return esta;
+}
+
+void ABB::Borrar(int dat)
+{
+Nodoarbol *padre= 0;
+Nodoarbol *nodo;
+int auxdato;
+Nodoarbol * auxpunt = root;
+while(!Vacio(auxpunt))
+{
+if(dat == auxpunt->GetInfo())
+{
+if(EsHoja(auxpunt))
+{
+if(padre)
+if(padre->GetDer() == auxpunt) padre->SetDer(0);
+else if(padre->GetIzq()== auxpunt) padre->SetIzq(0);
+delete auxpunt;
+auxpunt = 0;
+return;
+}
+else
+{
+padre= auxpunt;
+if(auxpunt->GetDer())
+{
+nodo = auxpunt->GetDer();
+while(nodo->GetIzq())
+{
+padre= nodo;
+nodo = nodo->GetIzq();
+}
+}
+else
+{
+nodo = auxpunt->GetIzq();
+while(nodo->GetDer())
+{
+padre= nodo;
+nodo = nodo->GetDer();
+}
+}
+auxdato = auxpunt->GetInfo();
+auxpunt->SetInfo(nodo->GetInfo());
+nodo->SetInfo(auxdato);
+auxpunt = nodo;
+}
+}
+else
+{
+padre= auxpunt;
+if(dat > auxpunt->GetInfo()) auxpunt = auxpunt->GetDer();
+else if(dat < auxpunt->GetInfo()) auxpunt = auxpunt->GetIzq();
+}
+}
+}
+int main()
+{
+ABB ObjArbol;
+cout<<"Alta 20"<<endl;
+ObjArbol.Alta(20);
+cout<<"Alta 15,2,5,19,34,21"<<endl;
+ObjArbol.Alta(15);
+ObjArbol.Alta(2);
+ObjArbol.Alta(5);
+ObjArbol.Alta(19);
+ObjArbol.Alta(34);
+ObjArbol.Alta(21);
+cout << "En Orden: ";
+ObjArbol.Inorder();
+cout << endl;
+cout << "En Pre Orden: ";
+ObjArbol.Preorder();
+cout << endl;
+cout << "En Post Orden: ";
+ObjArbol.Postorder();
+cout << endl;
+cout<<"Borra 19"<<endl;
+ObjArbol.Borrar(19);
+ObjArbol.Inorder();
+cout << endl;
+cout<<"Borra 34"<<endl;
+ObjArbol.Borrar(34);
+ObjArbol.Inorder();
+cout << endl;
+cout<<"Borra 15"<<endl;
+ObjArbol.Borrar(15);
+ObjArbol.Inorder();
+cout << endl;
+int i;
+cin>>i;
+}

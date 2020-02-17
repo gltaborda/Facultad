@@ -1,0 +1,16 @@
+# depslib dependency file v1.0
+1431032413 source:c:\users\nicolas\desktop\algo 2\tp1\funciones.cpp
+	"Funciones.h"
+	<fstream>
+	<sstream>
+
+1430765251 c:\users\nicolas\desktop\algo 2\tp1\funciones.h
+	<fstream>
+	<iostream>
+	<string>
+	<cstdlib>
+
+1430425401 source:c:\users\nicolas\desktop\algo 2\tp1\main.cpp
+	<iostream>
+	"Funciones.h"
+

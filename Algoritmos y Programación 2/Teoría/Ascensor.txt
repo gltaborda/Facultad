@@ -1,0 +1,184 @@
+class Ascensor {
+
+    private:
+
+        unsigned int cantidadDePisos;
+
+        unsigned int piso;
+
+        unsigned int pisosDesplazados;
+
+        unsigned int* llamadasDesdePiso;
+
+    public:
+
+        /* pre : 'pisos' indica la cantidad de pisos por los que se moverá
+         *       (sin considerar la planta baja), debe ser mayor a 0.
+         * post: el ascensor está en la planta baja, con la posibilidad
+         *       de moverse entre [1..'pisos'].
+         */
+        Ascensor(unsigned int pisos);
+
+        /* post: devuelve el máximo piso al que puede moverse el Ascensor.
+         */
+        unsigned int obtenerUltimoPiso();
+
+        /* post: devuelve el piso en el que se encuentra el Ascensor. Si está
+         *       en planta baja devuelve 0 (cero).
+         */
+        unsigned int obtenerPisoActual();
+
+        /* pre : 'piso' es un valor en el intervalo [0..obtenerUltimoPiso()]
+         * post: mueve el ascensor al piso indicado, o a Planta Baja si 'piso'
+         *       es 0.
+         *       Devuelve la cantidad de pisos que se movió.
+         */
+        unsigned int llamarDesdePiso(unsigned int piso);
+
+        /* post: Devuelve la cantidad total de pisos que el ascensor
+         *       subió y bajó.
+         */
+        unsigned int totalizarPisosDesplazados();
+
+        /* pre : 'piso' es un valor en el intervalo [0..obtenerUltimoPiso()].
+         * post: devuelve la cantidad de veces que el ascensor fue llamado
+         *       desde 'piso'.
+         */
+        unsigned int totalizarLlamadasDesdePiso(unsigned int piso);
+
+        /* post: libera los recursos asociados.
+         */
+        ~Ascensor();
+
+    private:
+
+        /* post: lanza una excepción si 'piso' no está en el rango
+         *       [0..obtenerUltimoPiso()].
+         */
+        void validarPiso(unsigned int piso);
+};
+
+#include <string>
+#include "Ascensor.h"
+
+using namespace std;
+
+Ascensor::Ascensor(unsigned int pisos) {
+
+    if (pisos < 1) {
+
+        throw string("No se puede inicializar el Ascensor con menos de un piso");
+    }
+
+    this->cantidadDePisos = pisos;
+    this->piso = 0;
+    this->pisosDesplazados = 0;
+
+    /* inicializa los contadores de llamadas a un piso */
+    this->llamadasDesdePiso = new unsigned int[this->cantidadDePisos + 1];
+    for (unsigned int i = 0; i <= this->cantidadDePisos; i++) {
+        this->llamadasDesdePiso[i] = 0;
+    }
+}
+
+unsigned int Ascensor::obtenerUltimoPiso() {
+
+    return this->cantidadDePisos;
+}
+
+unsigned int Ascensor::obtenerPisoActual() {
+
+    return this->piso;
+}
+
+unsigned int Ascensor::llamarDesdePiso(unsigned int piso) {
+
+    unsigned int desplazamiento;
+
+    this->validarPiso(piso);
+
+    if (piso > this->obtenerPisoActual()) {
+
+        desplazamiento = piso - this->obtenerPisoActual();
+
+    } else {
+
+        desplazamiento = this->obtenerPisoActual() - piso;
+    }
+
+    this->piso = piso;
+    this->pisosDesplazados += desplazamiento;
+    this->llamadasDesdePiso[this->piso]++;
+
+    return desplazamiento;
+}
+
+unsigned int Ascensor::totalizarPisosDesplazados() {
+
+    return this->pisosDesplazados;
+}
+
+unsigned int Ascensor::totalizarLlamadasDesdePiso(unsigned int piso) {
+
+    this->validarPiso(piso);
+
+    return this->llamadasDesdePiso[piso];
+}
+
+void Ascensor::validarPiso(unsigned int piso) {
+
+    if (piso > this->obtenerUltimoPiso()) {
+
+        throw string("Piso inexistente");
+    }
+}
+
+Ascensor::~Ascensor() {
+
+    delete[] this->llamadasDesdePiso;
+}
+
+#include <string>
+#include <iostream>
+#include "Ascensor.h"
+
+using namespace std;
+
+int main() {
+
+    cout << ".:: Ascensor ::." << endl;
+
+    Ascensor ascensorPrincipal(10);
+    Ascensor ascensorDeServicio(12);
+
+    cout << "El Ascensor principal se mueve entre PB y el piso " <<
+            ascensorPrincipal.obtenerUltimoPiso() << endl;
+
+    cout << "El Ascensor de servicio se mueve entre PB y el piso " <<
+            ascensorDeServicio.obtenerUltimoPiso() << endl;
+
+    unsigned int pisosDesplazados;
+    pisosDesplazados = ascensorPrincipal.llamarDesdePiso(6);
+    cout << "El Ascensor principal está en el piso " <<
+            ascensorPrincipal.obtenerPisoActual() <<
+            " luego de moverse " << pisosDesplazados << " pisos" << endl;
+
+    pisosDesplazados = ascensorPrincipal.llamarDesdePiso(2);
+    cout << "El Ascensor principal está en el piso " <<
+            ascensorPrincipal.obtenerPisoActual() <<
+            " luego de moverse " << pisosDesplazados << " pisos" << endl;
+
+    cout << "El Ascensor principal se desplazó en total " <<
+            ascensorPrincipal.totalizarPisosDesplazados() <<
+            " pisos" << endl;
+
+    for (unsigned int piso = 0; piso <= ascensorPrincipal.obtenerUltimoPiso(); piso++) {
+
+        cout << "El Ascensor principal fue llamado " <<
+                ascensorPrincipal.totalizarLlamadasDesdePiso(piso) <<
+                " vez/ces desde el piso " << piso << endl;
+
+    }
+
+    return 0;
+}

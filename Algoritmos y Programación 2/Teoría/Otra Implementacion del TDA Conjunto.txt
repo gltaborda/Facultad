@@ -1,0 +1,209 @@
+#include <iostream>
+using namespace std;
+class ABB;
+//En este ejemplo se aplica el concepto de friend para que la clase arbol tenga acceso a nodo 
+
+class NodoArbol
+{
+friend class ABB;
+public:
+NodoArbol(int dato, NodoArbol *i=0, NodoArbol *d=0) {info=dato ; izq=i; der=d;}
+private:
+int info;
+NodoArbol *izq;
+NodoArbol *der;
+};
+class ABB
+{
+public:
+ABB() : puntraiz(0) {}
+void Alta(int );
+bool Buscar(int) const;
+void Inorder() const;
+void Postorder() const;
+void Preorder() const;
+void Borrar(int dat);
+private:
+NodoArbol *puntraiz;
+void Inord(const NodoArbol* ) const;
+void Preord(const NodoArbol* ) const;
+void Postord(const NodoArbol *) const;
+bool Vacio(const NodoArbol*  r)const { return r==0; } 
+bool EsHoja(const NodoArbol* r) const { return !r->der && !r->izq; }
+};
+void ABB::Alta(int d) //un ejemplo de insercion iterativa
+{
+if (! puntraiz) puntraiz= new NodoArbol (d);
+else {
+NodoArbol *aux=puntraiz;
+bool ready=false;
+while (!ready)
+{
+if (d<aux->info)
+{
+if(aux->izq)
+aux=aux->izq;
+else
+{
+aux->izq=new NodoArbol(d);
+ready=true;
+}
+}
+else
+{
+if(aux->der)
+aux=aux->der;
+else
+{
+aux->der=new NodoArbol(d);
+ready=true;
+}
+}
+}
+}
+}
+void ABB::Inord(const NodoArbol* n) const
+{
+if (n)
+{
+Inord(n->izq);
+cout<<n->info<<" ";
+Inord(n->der);
+}
+}
+void ABB::Preord(const NodoArbol* n) const
+{
+if (n)
+{
+cout<<n->info<<" ";
+Preord(n->izq);
+Preord(n->der);
+}
+}
+void ABB::Postord(const NodoArbol* n) const
+{
+if (n)
+{
+Postord(n->izq);
+Postord(n->der);
+cout<<n->info<<" ";
+}
+}
+
+void ABB::Inorder() const
+{
+Inord(puntraiz);
+}
+void ABB::Preorder() const
+{
+Preord(puntraiz);
+}
+void ABB::Postorder() const
+{
+Postord(puntraiz);
+}
+
+bool ABB::Buscar(int d) const
+{
+NodoArbol *current= puntraiz;
+bool esta = false;
+while((!esta) && (current))
+{
+if(d == current->info) esta=true;
+else if(d > current->info) current = current->der;
+else if(d < current->info) current = current->izq;
+}
+return esta;
+}
+
+
+void ABB::Borrar(int dat)
+{
+NodoArbol *father= 0;
+NodoArbol *nodo;
+int aux;
+NodoArbol * current = puntraiz;
+while(!Vacio(current))
+{
+if(dat == current->info)
+{
+if(EsHoja(current))
+{
+if(father)
+if(father->der == current) father->der = 0;
+else if(father->izq == current) father->izq = 0;
+delete current;
+current = 0;
+return;
+}
+else
+{
+father= current;
+if(current->der)
+{
+nodo = current->der;
+while(nodo->izq)
+{
+father= nodo;
+nodo = nodo->izq;
+}
+}
+else
+{
+nodo = current->izq;
+while(nodo->der)
+{
+father= nodo;
+nodo = nodo->der;
+}
+}
+aux = current->info;
+current->info = nodo->info;
+nodo->info = aux;
+current = nodo;
+}
+}
+else
+{
+father= current;
+if(dat > current->info) current = current->der;
+else if(dat < current->info) current = current->izq;
+}
+}
+}
+int main()
+{
+ABB ObjArbol;
+cout<<"Alta 20"<<endl;
+cout<<"Alta 15,2,5,19,34,21"<<endl;
+ObjArbol.Alta(15);
+ObjArbol.Alta(2);
+ObjArbol.Alta(5);
+ObjArbol.Alta(19);
+ObjArbol.Alta(34);
+ObjArbol.Alta(21);
+cout << "En Orden: ";
+ObjArbol.Inorder();
+cout << endl;
+cout << "En Pre Orden: ";
+ObjArbol.Preorder();
+cout << endl;
+cout << "En Post Orden: ";
+ObjArbol.Postorder();
+cout << endl;
+cout<<"Borra 19"<<endl;
+ObjArbol.Borrar(19);
+ObjArbol.Inorder();
+cout << endl;
+cout<<"Borra 34"<<endl;
+ObjArbol.Borrar(34);
+ObjArbol.Inorder();
+cout << endl;
+cout<<"Borra 15"<<endl;
+ObjArbol.Borrar(15);
+ObjArbol.Inorder();
+cout << endl;
+system("pause");
+return 0;
+
+}
