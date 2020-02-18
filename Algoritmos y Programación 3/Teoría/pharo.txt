@@ -1,0 +1,66 @@
+| tp0 tp1 tp1s tp1j tp2 parcial cursada |
+
+tp0 := 10.
+tp1s := 6.
+tp1j := 8.
+tp2 := 4.
+parcial := 10.
+
+
+(tp1s > 7) ifTrue: [								"corchetes=bloque de codigo"
+	Transcript show: 'No debe entregar TP1J'.
+	tp1:=0.35 * tp1s.
+]
+ifFalse: [
+	Transcript show: 'Debe entregar TP1J';
+	(tp1 := 0.2 * tp1s) + (0.15 * tp1j).
+cr.]										;cr. ---> salto de linea
+
+cursada := (0.05 * tp0) + 
+
+
+
+for
+---
+
+| i |
+i := 0.
+[ i < 4 ] whileTrue: [
+	Transcript show: i; cr.
+	i := i+1.
+]
+
+--------
+
+1 to: 10 do: [ :i | Transcript show i;cr. ]						i es variable local
+
+-------
+
+20 timesRepeat: [ Transcript show: 'OK'; cr.
+]
+
+
+--------------------
+
+arrays										empiezan en 1
+------
+
+arreglo := Array new.								new crea el objeto
+arreglo at: 1 put: 4.
+arreglo at: 2 put: 5.
+arreglo at: 3 put: 6.
+arreglo at: 4 put: 7.
+
+arreglo do: [ :i | Transcript show: i; cr. ]
+
+										^ equivale a return
+generalizacion
+
+| coleccion |
+
+coleccion := OrderedCollection new.
+
+coleccion add: 1.
+
+--------------------------
+
