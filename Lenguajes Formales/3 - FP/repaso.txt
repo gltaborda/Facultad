@@ -1,0 +1,228 @@
+Definición de iota
+
+Def inc = + o [id,~1]
+
+Def auxiota  = > o [1,2] -> 3; auxiota  o [inc o 1,2,apndr o [3,1]]
+
+Def iota = auxiota o [~1,id,~<>]
+
+
+1. Definir funciones que devuelvan como resultado:
+a) El máximo de dos números.
+
+Def mayor = > -> 1;2
+
+
+b) El máximo de una secuencia.
+
+Def maximo = /mayor
+
+
+c) El primer átomo de una secuencia.
+
+Def agrtacho = apndr o [id, ~<>]
+
+Def auxev = null o 1 -> 2; apndl
+
+Def ev = /auxev o agrtacho					eliminar vacio
+
+Def primatom = 1 o ev o @ (atom -> id; ~<>)
+
+Def ultatom = 1r o ev o @ (atom -> id; ~<>)
+
+
+d) El elemento mínimo entre los máximos por fila de una matriz (minimax).
+
+Def menor = < -> 1;2
+
+Def minimo = /menor
+
+Def minmax = minimo o @maximo
+
+
+2. Definir funciones que determinen:
+a) La pertenencia de un elemento a una secuencia.
+
+Def pert = null o 2 -> ~F; /or o @eq o distl
+
+
+b) Si una secuencia tiene un solo componente.
+
+Def uncomp = eq o [length,~1]
+
+
+c) Si la cantidad de átomos de una secuencia es par.
+
+Def compare =  eq o [(null -> ~0;1r) o iota,id]
+
+Def cantatomospar = compare o % o [length,~2] o ev o @ (atom -> id;~<>)
+	
+
+3. Dada una secuencia con dos subsecuencias, definir funciones para determinar:
+a) La unión de ambas subsecuencias.
+
+Def auxunion  = pert -> 2; apndl
+
+Def union = /auxunion o apndr
+
+
+b) La intersección de ambas subsecuencias.
+
+Def auxintersec = pert -> 1;~<>
+
+Def intersec = ev o @auxintersec o distr
+
+
+c) La diferencia de ambas subsecuencias.
+
+Def auxdiff = pert -> ~<>;1
+
+Def diff = ev o @auxdiff o distr
+
+
+d) La diferencia simétrica de ambas subsecuencias. 
+
+Def diffsimetric = union o [diff,diff o [2,1]]
+
+
+4. Definir una función que aplicada sobre un número natural n; obtenga como
+resultado el máximo valor resultante de aplicar cierta función B (predefinida)
+sobre el intervalo natural que finaliza en n (Máximo entre B:1; B:2; ... B:n). 
+
+WAT
+
+
+5. Definir funciones que permitan:
+a) Planchar una secuencia.
+
+Def flatten = atom -> [id]; /concat o @flatten
+
+
+b) Concatenar dos subsecuencias planchadas.
+
+Def concat = /apndl o apndr
+
+
+c) Invertir totalmente una secuencia.
+
+Def revertotal = reverse o @(atom -> id;revertotal)
+
+
+d) Ordenar una secuencia.
+
+Def sort = 
+
+
+e) Calcular la profundidad de una secuencia (niveles de subsecuencias). 
+
+Def prof = atom ->~0; maximo o @(inc o prof)
+
+
+6. Definir la función distancia al cuadrado, aplicable a una secuencia compuesta por
+dos subsecuencias, cada una de las cuales representa un vector de Rn.
+
+Def restavect = @- o trans
+
+Def alcuadrado = * o [id,id]
+
+Def distalcuad = /+ o @alcuadrado o restavect
+
+
+7. Dados dos vectores de un espacio n-dimensional, definir una función que
+determine si ambos vectores tienen al menos una componente en coincidencia.
+
+Def coincidencia = /or o @pert o distr
+
+
+8. Definir el producto de un escalar por una matriz.
+
+Def escalarporvector = @* o distl
+
+Def escalarpormatriz = @escalarporvector
+
+
+9. Dada una matriz de números enteros, definir una función que obtenga la
+sumatoria de los números mayores que 0 de las columnas pares.
+
+
+
+10.Definir una función selector por izquierda para arreglos de n dimensiones.
+Ej: < <3, 2>, < <A, B, C>, <D, E, F>, <G, H, I> > > → <H>
+
+
+
+11.Dados dos vectores n-dimensionales, obtener el vector suma (sin recursividad).
+
+Def vectorsuma = @+ o trans
+
+
+12.Dado un número n, generar la siguiente secuencia (sin recursividad):
+<<1>, <1, 2>, <1, 2, 3>, <1, 2, 3, 4>, ... <1, 2, 3, 4, ... n>>
+
+Def listaiota = @iota o iota
+
+
+13.Dada una secuencia con dos elementos, donde el primero es un átomo o secuencia
+y el segundo es un número, obtener una secuencia que contenga el primer
+elemento tantas veces como indica el número.
+Ej: < a, 4 > → < a, a, a, a >
+
+Def repetir = @1 o distl o [1,iota o 2]
+
+Utilizando la función anterior, escribir una función no recursiva que aplicada a un
+número n devuelva una matriz de n × n de la siguiente forma:
+Si n=4 → < <1, 2, 3, 4>, <1, 2, 3, 4>, <1, 2, 3, 4>, <1, 2, 3, 4> >
+
+Def matriznxn = repetir o [iota,id]
+
+
+14.Dada una secuencia de pares ordenados donde la primera componente indica el
+equipo que resultó ganador y la segunda indica el perdedor y donde cada par
+ordenado indica un partido jugado (no hay empates) obtener:
+
+<<in,ra>,<in,ri>,<bo,ri>,<bo,ra>,<ra,ri>,<bo,hu>,<hu,ri>>
+
+Def elimrep = union o [id, ~<>]
+
+Def obtganadores = elimrep o 1 o trans
+
+Def obtperdedores = elimrep o 2 o trans
+
+
+a) Los equipos invictos.
+
+Def obtinvictos = diff o [obtganadores, obtperdedores]
+
+
+b) Los que siempre perdieron.
+
+Def obtfracasados = diff o [obtperdedores, obtganadores]
+
+
+c) Los que ganaron más veces de las que perdieron.
+
+Def contar = [1,/+ o @(eq -> ~1; ~0) o distl]
+
+Def listaequipos = elimrep o union o trans
+
+Def cantvict = @contar o distr o [listaequipos, 1 o trans]
+
+Def cantderr = @contar o distr o [listaequipos, 2 o trans]
+
+Def auxvictoria = > o [2 o 1, 2 o 2] -> 1 o 1; ~<>
+
+Def ganadores = ev o @auxvictoria o trans o [cantvict, cantderr]
+
+
+d) Los que perdieron más veces de las que ganaron.
+
+Def auxderrota = < o [2 o 1, 2 o 2] -> 1 o 1; ~<>
+
+Def perdedores = ev o @auxderrota o trans o [cantvict, cantderr]
+
+
+e) Los que perdieron y ganaron la misma cantidad de veces.
+
+Def auxempate = eq o [2 o 1, 2 o 2] -> 1 o 1; ~<>
+
+Def empatadores = ev o @auxempate o trans o [cantvict, cantderr]

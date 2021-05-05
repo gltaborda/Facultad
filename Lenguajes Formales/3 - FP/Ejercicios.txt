@@ -1,0 +1,128 @@
+definición de iota
+
+Def inc = + o [id,~1]
+
+Def auxiota  = > o [1,2] -> 3; auxiota  o [inc o 1,2,apndr o [3,1]]
+
+Def iota = auxiota o [~1,id,~<>]
+
+
+
+1) a)	Def may = > -> 1;2
+
+b)	Def max = /may
+
+c)	Def primatom = 1 o ev o @ (atom -> id; ~<>)
+	Def auxev = null o 1 -> 2; apndl
+	Def ev = (/auxev) o agrtacho					eliminar vacio
+	Def agrtacho = apndr o [id, ~<>]
+
+otro 	Def ultatom = 1r o ev o @ (atom -> id; ~<>)
+
+d)	Def menor = < -> 1; 2
+	Def min = /menor
+	Def minimax = min o @ max		(usa el max definido en el b))
+
+ 
+
+2)a)	Def pert = null o 2 -> ~F; (/or) o (@ eq) o distl
+distl	distribuye el elemento con todos,
+@eq	compara todas las "tuplas", queda secuencia de true o false,
+/or	hace un or entre todos (con que uno sea true ya es true obviamente)
+null o 2 creo que chequea si el segundo elemento es null, si no lo es opera
+(sin la primera parte tambien funciona, se rompera si se le pasa una secuencia vacia)
+
+
+
+b)	Def uncomponente = eq o [length,~1]
+
+
+c)	Def cantatomospar = compare o % o [length,~2] o ev o @ (atom -> id;~<>)
+	Def compare = eq o [1r o iota,id]
+	usa ev del primatom
+
+
+
+3)a)	Def auxunion  = pert -> 2; apndl
+	Def union = /auxunion o apndr
+aux chequea si el 1er elem pertenece en el 2, si es así devuelve el segundo elemento, sino lo agrega a la izq
+union agrega a la derecha el segundo elemento sobre el primero (quedan 2 secuencias) y aplica aux 2 a 2
+
+
+
+b)	Def pert2 = pert -> 1; ~<>					usa el pert del 2)a)
+	Def auxev  = null o 1 -> 2; apndl				chequea si es null el primero, si no lo es lo agrega a la izq
+	Def ev = (/auxev) o agrtacho					aplica auxev a los ultimos 2, agregando de a 1 al tacho
+	Def intersec = ev  o @ pert2 o distr				son los mismos ev y auxev de primatom
+
+
+c)	Def pert3 = pert -> ~<>; 1
+	Def diferencia = ev o @ pert3 o distr
+
+
+	
+d)	Def difreversa = diferencia o reverse
+	Def difsimetrica = union o [diferencia,difreversa]
+	Def difsimetrica = union o [diferencia,diferencia o [2,1]]		Este seria mas directo
+
+
+5)a)	Def apnd = atom o 1 -> (atom o 2 -> id; apndl); (atom o 2 -> apndr; concat)
+
+	Def flatten = ((/and o @atom) -> id;flatten) o /apnd
+
+#DIEGO	Def flatten = atom -> [id]; /concat o @flatten			el [] me arma una secuencia con los atomos, ta lapio
+
+b)	Def concat = /apndl o apndr
+
+
+c)	Def revertotal = reverse o @(atom -> id;revertotal)
+
+
+7)	Def coincidencia = /or o @pert o distr
+
+
+8)	Def escalarporvector = @* o distl
+				
+	Def escalarpormatriz = @escalarporvector o distl
+
+10)	INTENTO
+	Def prueba = ((eq o [1 o 1,~1]) -> 1 o tl; (prueba o apnd o [apnd o [decr o (1 o 1), 2 o 1], tl]))
+	NI IDEA
+
+
+
+11)	Def vectorsuma = @+ o trans
+
+
+12)	Def listaiota = @ iota o iota						SEGUN PABLO SE PUEDE USAR IOTA EN EL PARCIAL
+
+13) 	Def repetir = @1 o distl o [1,iota o 2]
+	
+	Def matriznxn = repetir o [iota,id]
+
+
+<<in,ra>,<in,ri>,<bo,ri>,<bo,ra>,<ra,ri>,<bo,hu>,<hu,ri>>
+
+14)a)	Def obtganador = union o [@1,~<>]
+	Def obtperdedor = union o [@2,~<>]					lo de eliminar repetidos con la secuencia vacia ta copado
+	Def obtinvicto = diferencia o [obtganador,obtperdedor]
+
+	Def invictos = union o [diferencia o trans, ~<>]				este es mucho mas directo, bajon ser yo
+
+	Def er = union o [id,~<>]						lo mismo que hice arriba para eliminar repetidos
+
+b)	Def obtfracasados = diferencia o [obtperdedor,obtganador]
+
+c)	<<b r> <r a> <b a> <a c> <b c> <c r> <h r>>
+	Def unicos = union o [union o trans, ~<>]
+	Def contar = [1,/+ o @(eq -> ~1; ~0) o distl]
+	Def listaequipos = er o union o trans
+	Def cantvict = @contar o distr o [listaequipos , 1 o trans]	cuenta victorias
+	Def cantderr = @contar o distr o [listaequipos , 2 o trans]	cuenta derrotas
+	Def auxvictoria = > o [2 o 1, 2 o 2] -> 1 o 1; ~<>
+	Def ganadores = ev o @auxvictoria o trans o [cantvict, cantderr]
+
+d)	Def perdedores = ev o @auxvictoria o trans o [cantderr, cantvict]
+
+e)	Def auxempate = eq o [2 o 1, 2 o 2] -> 1 o 1; ~<>
+	Def empatadores = ev o @auxempate o trans o [cantderr, cantvict]

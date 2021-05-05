@@ -1,0 +1,805 @@
+Ej 1)	(defn tercer_angulo [x y] (if (and (pos? x) (pos? y)) (- 180 (+ x y)) "Error"))
+
+con condicionales de pablo (algunos estan de mas)
+
+ (defn tercer-angulo [a1 a2] (cond
+                                           (not (pos? a1)) "Error1"
+                                           (> a1 180) "Error2"
+                                           (not (pos? a2)) "Error3"
+                                           (> a2 180) "Error4"
+                                           (> (+ a1 a2) 180) "Error5"
+                                           :else(- 180 (+ a1 a2))
+                                    )
+          )
+
+###MIO
+
+(defn tercerangulo [x y] (cond
+(not (and (pos? x) (< x 180))) "Primer numero invalido"
+(not (and (pos? y) (< y 180))) "Segundo numero invalido"
+(> (+ x y) 180) "Los numeros ingresados suman mas de 180"
+:else (- 180 (+ x y))
+)
+)
+
+Ej 2)
+(defn segundos [d h m s]
+    (cond
+        (or (< s 0) (>= s  60)) "Error en segundos"
+        (or (< m 0) (> m  60)) "Error en minutos"
+        (or (< h 0) (> h  24)) "Error en horas"
+        (or (< d 0) (> d  31)) "Error en dias"
+        :else (+ s (* 60 m) (* h 3600) (* d 3600 24))
+    )
+)
+
+####MIO
+
+(defn segundos [d h m s] (cond
+(or (< s 0) (> s 59)) "Segundos invalidos"
+(or (< m 0) (> m 59)) "Minutos invalidos"
+(or (< h 0) (> h 23)) "Horas invalidas"
+(or (< d 0) (> d 30)) "Dias invalidos"
+:else (+ s (* m 60) (* h 60 60) (* d 60 60 24))
+)
+)
+
+
+EJ 3)
+
+(defn sig-mul-10 [n]
+(cond
+(< n 10) 10
+:else (+ (sig-mul-10 (- n 10) ) 10)
+)
+)
+
+### NO FUNCIONA, NI IDEA POR QUE NO TOMA MULT
+
+(defn sig-mul-10-2 [n] ((sig-mul-10-2 n 10))
+	([n mult]
+	(cond
+	(< n mult) mult
+	:else (sig-mul-10-2 n (+ mult 10))
+	)
+	)
+)
+
+
+EJ 4)
+
+
+
+
+Ej 5)	(defn capicua? [x] (= (seq (str x)) (reverse (str x))))
+
+###MIO CON CONDICIONALES
+
+(defn capicua? [x] (cond
+(neg? x) "Numero negativo"
+(> x 99999) "Numero de mas de 5 cifras"
+:else (= (seq (str x)) (reverse (str x)))
+)
+)
+
+con condicionales de pablo
+
+(defn capicua? [n] (cond 
+			(neg? n) "Error1"
+                        (> n 99999) "Error2"
+                        :else (let [unidades (rem n 10),
+					decenas (rem (quot n 10) 10),
+					centenas (rem (quot n 100) 10),
+					unidades-mil (rem (quot n 1000) 10),
+					decenas-mil (rem (quot n 10000) 10)]
+					(cond
+						(< n 10) true
+						(< n 100) (= unidades decenas)
+						(< n 1000) (= unidades centenas)
+						(< n 10000) (if (= unidades unidades-mil) (= decenas centenas) false)
+						:else (if (= unidades decenas-mil) (= decenas unidades-mil) false)
+					)								   
+				)
+		     )
+)
+
+### MIO CON COND DE PABLO
+
+(defn capicua2? [n]
+(cond
+(neg? n) "Numero negativo"
+(> n 99999) "Numero de mas de 5 cifras"
+:else (let [unidades (rem n 10),
+decenas  (rem (quot n 10) 10),
+centenas (rem (quot n 100) 10),
+unidades-de-mil (rem (quot n 1000) 10),
+decenas-de-mil (quot n 10000)]
+(cond
+(< n 10) true
+(< n 100) (= unidades decenas)
+(< n 1000) (= unidades centenas)
+(< n 10000) (and (= unidades unidades-de-mil) (= decenas centenas))
+:else (and (= unidades decenas-de-mil) (= decenas unidades-de-mil))
+)
+)
+)
+)
+
+EJ 6)
+
+### VERSION SIN COND, NO SE ME OCURRIO OTRA TODAVIA
+
+##transforma el número en el término correspondiente
+(defn calc-term [n] (/ (if (even? n) (inc (* 2 (- n))) (dec (* n 2)))))		
+
+(defn aprox-pi [n] (float (* 4 (reduce + (rest (map calc-term (range (inc n))))))))
+
+### ESTO ERA EL INTENTO CON RECURSIVIDAD, NI IDEA
+(defn  aprox-pi [n]
+	(cond
+	(= n 1)	1
+	:else (- 1 (aprox-pi (- n 1)))
+	)
+)
+
+		
+###	
+
+EJ 7)
+
+(defn invertir [n]
+	(cond
+	(neg? n) "Numero negativo"
+	:else (read-string (apply str (reverse (str n))))
+	)
+)
+
+
+### NO FUNCIONA, NI IDEA
+(defn invertir [n]
+	(cond
+	(neg? n) "Numero negativo"
+	:else (+ (* 10 (rem n 10)) (invertir (quot n 10)))
+	)
+)
+
+###
+
+
+Ej 8)
+
+###MIO
+
+(defn nth-fibo [n] (cond
+	(neg? n) "Numero negativo"
+	(zero? n) 0
+	(= n 1) 1
+	:else (+ (nth-fibo (- n 1)) (nth-fibo (- n 2)))
+	)
+)
+
+(defn print-nth-fibo [n] (map nth-fibo (range n)))
+
+###
+
+(defn nth-fibo [n] (cond
+    (not (pos? n)) "Error. n negativo"
+    (= n 0) 0
+    (= n 1) 1
+    :else(+ (nth-fibo (- n 1) ) (nth-fibo (- n 2) ))
+    )
+)
+
+(defn nth-fibo-sec [n] (map nth-fibo (range n)))
+
+de Pablo con distintas aridades
+
+(defn nth-fibo ([n] 
+                    (cond
+						  (neg? n) nil 
+						  (zero? n) 0 
+						  (= n 1) 1 
+						  :else(nth-fibo 0 1 2 n)
+					)
+				)
+               ([f1 f2 cont n] 
+					(if (= cont n) (+ f1 f2) (nth-fibo f2 (+ f1 f2) (inc cont) n))
+				)
+)
+
+(defn print-nth-fibo [n] (map nth-fibo (range n)))
+
+
+Ej 9)
+
+(defn cant-dig [n]
+	(cond
+	(not (integer? n)) "No se ingreso un numero entero"
+	(neg? n) (cant-dig (- n))
+	:else (count (str n))
+	)
+)
+
+
+
+(defn cant-dig [x] (if (integer? x) (count (str (max x (- x)))) "no es entero"))
+
+
+(defn cant-dig [n] 
+  (cond
+    (not (int? n)) "No es entero"
+    (neg? n) (cant-dig (int (drop-last(str n))))
+  :else(count (str n))
+  )
+) 
+
+
+Ej 10)
+
+pablo dice que podria hacerse al reves e ir multiplicando
+
+
+(defn pot? [x y]
+	(cond
+	(zero? y) false
+	(= x y) true
+	(< x y) false
+	:else (pot? (/ x y) y)
+	)
+)
+
+
+
+(defn pot? [x y] (cond
+		(> x y) (pot? (/ x y) y) 
+		(< x y) false
+		:else true
+	)
+)
+
+
+Ej 11)
+
+(defn digs [n]
+	(cond
+	(not (integer? n)) "No se ingresó un número"
+	(neg? n) (digs (- n))
+	:else (map chartonum (seq (str n)))
+	)
+)
+
+
+
+
+
+(defn digs [n] (if (number? n) (if (pos? n) (seq (str n)) (seq (str (- n)))) "Error!"))
+
+(map {\0 0 \1 1 \2 2 \3 3 \4 4 \5 5 \6 6 \7 7 \8 8 \9 9} (digs 1592))
+
+(defn chartonum [c] ({\0 0 \1 1 \2 2 \3 3 \4 4 \5 5 \6 6 \7 7 \8 8 \9 9} c))
+
+otra opcion mapear str a int
+(defn numCharToNum [c] (- (int c) 48))
+
+
+Ej 12)
+
+(defn repartir [lista]
+	(cond
+	(zero? (length lista)) "Uno para vos, uno para mí"
+	
+
+
+###TA PIOLA, NO CREO PODER MEJORARLO
+
+(defn imprimir [ args ] ( str "Uno para " args ", uno para mi"))
+
+(defn repartir ( [] (imprimir "vos") ) ( [& more1] (map imprimir more1)))
+
+
+Ej 13)
+
+(defn soloPares 
+	([l] (map second (partition 2 l)))
+	([l1 l2] (concat (soloPares l1) (soloPares l2)))
+)
+
+
+EJ 14)
+
+(defn maptoarn [c] ({'G 'C 'C 'G 'T 'A 'A 'U} c))
+
+(defn adn2arn [lista]
+	(map maptoarn lista)
+)
+
+###O MAS CORTO
+
+(defn adn2arn [lista]
+	(map {'G 'C 'C 'G 'T 'A 'A 'U} lista)
+)
+
+
+Ej 15)
+
+
+(defn elim [dato l] 
+	(cond
+	(empty? l) l									SI ESTA VACIA LA DEVUELVE
+	(coll? (first l)) (cons (elim dato (first l)) (elim dato (rest l)))		SI ES "SECUENCIA" HACE ELIM A LA CABEZA Y A LA COLA (Y CONCATENA) (yo usaria seq?)
+	(= dato (first l)) (elim dato (rest l))						SI ES ELEMENTO Y ES IGUAL A DATO, LO SALTEA Y HACE ELIM A LA COLA
+	:else (cons (first l) (elim dato (rest l)))					SI ES ELEMENTO Y NO ES IGUAL A DATO, HACE ELIM A LA CABEZA Y A LA COLA (Y CONCATENA)
+))
+
+
+(defn elim [dato l] 
+	(cond
+	(empty? l) l									
+	(coll? (first l)) (cons (elim dato (first l)) (elim dato (rest l)))		
+	(= dato (first l)) (elim dato (rest l))						
+	:else (cons (first l) (elim dato (rest l)))					
+))
+
+EJ 16)
+
+(defn last-all-levels [lista]
+	(cond
+	(seq? (last lista))	(last-all-levels (last lista))
+	:else (last lista)
+	)
+)
+
+EJ 17)
+
+### DEVUELVE EL CENTRAL EXACTAMENTE SI TIENE UNA CANT IMPAR DE ELEMENTOS, SINO DEVUELVE LA POS MAYOR DE LAS CENTRALES
+
+(defn central-element [lista] (nth lista (quot (count lista) 2)))
+
+### SI ES PAR DEVUELVE LAS 2 CENTRALES CONCATENADAS, NO CREO QUE ESTE MUY BIEN
+
+(defn central-element [lista]
+	(cond
+	(odd? (count lista)) (nth lista (quot (count lista) 2))
+	:else (concat (central-element (butlast lista)) (central-element (rest lista)))
+	)
+)
+
+
+
+EJ 18)
+
+### FACIL PASANDO A HASH
+
+(defn elim-repet [lista] (into '() (into #{} lista)))
+
+
+### MAS COMPLICADO USANDO SOLO LA LISTA
+
+(defn contiene [lista n] (some #(= n %) lista))
+
+(defn elim-repet ([lista]
+		(cond
+		(empty? lista) lista
+		:else (elim-repet (cons (first lista) '()) (rest lista))
+		)
+		)
+	([lista-nueva lista]
+	(cond
+	(empty? lista) lista-nueva
+	:else (flatten (if (contiene lista-nueva (first lista)) (elim-repet lista-nueva (rest lista)) (elim-repet (cons (first lista) lista-nueva) (rest lista))))
+	)
+	)
+)
+
+
+
+
+EJ 19)
+
+
+(defn sort-length-crec [list] (sort-by count list))
+
+(defn sort-length-decr [list] (sort-by count > list))
+
+
+
+EJ 20)
+
+
+
+
+## ESTOS ERAN DE TAREA
+
+Ej 21)
+
+### USANDO FOR, NO LE COPA AL PIBE
+
+(defn triang-sup [L] (for [x (range (count L))] (take-last (- (count L) x) (nth L x))))
+
+(triang-sup '((1 2 3 4 5) (6 7 8 9 10) (11 12 13 14 15) (16 17 18 19 20) (21 22 23 24 25)))
+
+### MEDIO ROBADO, ERA LO QUE QUERIA HACER CON TAKE-LAST PERO USA DROP QUE ES MAS FACIL
+
+(defn triang-sup [matriz]
+    (map drop (range (count matriz)) matriz)
+)
+
+(defn triang-sup [matriz]
+    (map-indexed drop matriz)
+)
+
+### SALIO EL TAKE-LAST CON MAP-INDEXED, IGUAL ES MAS FACIL EL DROP
+
+(defn triang-sup [matriz]
+    (map-indexed #(take-last (- (count %2) %1) %2) matriz)
+)
+
+
+### RECURSIVO
+
+(defn triang-sup [m]
+  (cond
+    (empty? (rest (first m))) m
+    :else (cons (first m) (triang-sup (rest (map rest m))))
+  )
+)
+
+
+
+Ej 22)
+
+(defn get-diag [m]
+	(map-indexed #(nth %2 %1) m)
+)
+
+
+(defn diag-princ [L] (for [x (range (count L))] (nth (nth L x) x)))
+
+(diag-princ '((1 2 3 4 5) (6 7 8 9 10) (11 12 13 14 15) (16 17 18 19 20) (21 22 23 24 25)))
+
+## OTRA MANERA DE HACERLO (de clase)
+
+(defn esCuadrada? [m] (every? (partial = (count m)) (map count m)))
+
+(defn putBackIota [l] (cons l (list (range (count l)))))
+
+(defn diag [l] (cond
+	(every? empty? l) '()
+	(esCuadrada? l) (apply map nth (putBackIota l))
+	:else "La matriz no es cuadrada."
+))
+
+## OTRA MAS
+
+(defn diagonal-iter[matriz]
+    (map-indexed #(nth %2 %1) matriz)			# es funcion anonima, %2 es el segundo elemento (fila), %1 es el primer elemento (indice)
+)
+
+## Y OTRA
+
+(defn transponer [l1]
+      (apply map list l1)
+)
+
+(defn getdiagonal [lista]
+        (cond
+        (empty? lista) (str "la matriz esta vacia ")
+        (not= (count lista) (count (transponer lista))) (str "la matriz no es cuadrada ")
+        true (map (fn [x y] (nth x y)) lista (range (count lista) ))
+        )
+)
+
+Ej 23)
+
+EJEMPLOS PARA LLEGAR A LA SOLUCION
+		
+(list 1 2)					=>	(1 2)				
+
+(map list '(1 2 3) '(4 5 6))			=>	((1 4) (2 5) (3 6))		hace lo que se quiere pero esta separado, se tiene que juntar
+
+(apply map list '((1 2 3)(4 5 6)))		=>	((1 4) (2 5) (3 6))		entonces se usa el apply
+
+SOLUCION
+
+(defn transponer [l] (apply map list l))
+
+
+EJ 24)
+
+(defn cont-ocur [lista] (frequencies lista))
+
+
+EJ 25)
+
+(defn separar-por-palabras [string] (re-seq #"\w+" string))
+
+(defn string-to-lower [string] (.toLowerCase string))
+
+(defn ocur-en-string [string] (frequencies (separar-por-palabras (string-to-lower string))))
+
+
+EJ 26)
+
+(defn dividir-n-por-menores [n] (map #(= 0 (rem n %)) (next (range 1 n))))
+
+(defn es-primo? [n] (every? false? (dividir-n-por-menores n)))
+
+(defn n-esimo-primo [n] (take n (filter es-primo? (nnext (range)))))
+
+EJ 27)
+
+
+(defn separar-por-letras [string] (re-seq #"\w" string))
+
+(defn letras-repetidas? [string] (not-every? #(= % 1) (vals (frequencies (separar-por-letras string)))))
+
+
+EJ 28)
+
+(defn aplicar-funciones [n lista] (map #(% n) lista))
+
+### ES MAS FACIL HACERLO CON UN VECTOR DE FUNCIONES, PARA UNA LISTA SE TIENE QUE LLAMAR ASI
+
+(aplicar-funciones 5 (list inc dec es-primo?))
+
+
+EJ 29)
+
+(defn tipo-triangulo [a b c]
+	(cond
+	(or (= a 0) (= b 0) (= c 0)) "Alguno de los lados es 0"
+	(or (< a 0) (< b 0) (< c 0)) "Alguno de los lados es negativo"
+	:else (if (= a b) (if (= b c) "Equilátero" "Isósceles") (if (= b c) "Isósceles" "Escaleno"))
+	)
+)
+
+
+EJ 30)
+
+(defn juntar [string] (apply str string))			apply aplica lo que se le pase a todos los parámetros, str convierte a string
+
+(defn slice [cad n] (map juntar (partition n 1 cad)))		juntar junta los parametros de cada lista, map aplica juntar a todas las listas
+
+
+
+EJ 31)
+
+### LO PASO A LOWERCASE PARA QUE CUENTE LAS LETRAS SIN IMPORTAR SI SON MAYUSCULAS O MINUSCULAS
+(defn string-to-lower [string] (.toLowerCase string))
+
+(defn separar-por-letras [string] (re-seq #"\w" string))
+
+(defn ocur-en-palabra [string] (frequencies (separar-por-letras string)))
+
+### ESTE ES MAS GENERAL, SOLO DICE SI ES ANAGRAMA
+(defn es-anagrama? [palabra anagrama] (= (ocur-en-palabra palabra) (ocur-en-palabra anagrama)))
+
+### MAS FACIL QUE HACER LA COMPARACION DENTRO DE LA FUNCION (DIRECTAMENTE DEVUELVE LA PALABRA, SINO DEVUELVE NIL)
+(defn es-anagrama2 [palabra anagrama] (if (= (ocur-en-palabra (string-to-lower palabra)) (ocur-en-palabra (string-to-lower anagrama))) anagrama))
+
+
+(defn posibles-anagramas [palabra lista]
+	(cond
+	(empty? lista) "Lista de anagramas vacía"
+	:else (filter some? (map #(es-anagrama2 palabra %) lista))
+	)
+)
+
+EJ 32)
+
+(defn string-to-upper [string] (.toUpperCase string))
+
+(defn separar-por-palabras [string] (re-seq #"\w+" string))
+
+### ESTE NO ME GUSTA TANTO PORQUE HACE MAP JUNTAR
+(defn separar [string] (map juntar (partition 1 string))) 
+
+(defn juntar [string] (apply str string))
+
+### LO HAGO EN MAYUSCULA PORQUE SUELEN ESCRIBIRSE ASI LOS ACRONIMOS NOMAS
+(defn acronimo [string] (juntar (map first (separar-por-palabras (string-to-upper string)))))
+
+
+EJ 33)
+
+(defn string-to-lower [string] (.toLowerCase string))
+
+(defn separar-por-letras [string] (re-seq #"\w" string))
+
+(defn pangrama? [string] 
+	(let [abecedario (set '("a" "b" "c" "d" "e" "f" "g" "h" "i" "j" "k" "l" "m" "n" "o" "p" "q" "r" "s" "t" "u" "v" "w" "x" "y" "z"))]
+	(= abecedario (set (separar-por-letras (string-to-lower string))))
+	)
+)
+
+
+EJ 34)
+
+(defn elevar-a-la-n [x n]
+	(cond
+	(= n 1) x
+	:else (* x (elevar-a-la-n x (dec n)))
+	)
+)
+
+
+(defn obtener-cifras [n]
+	(cond
+	(< n 10) n 
+	:else (flatten (list (rem n 10) (obtener-cifras (quot n 10))))
+	)
+)
+
+(defn narcissistic?  [n] (= n (apply + (map #(elevar-a-la-n % (count (str n))) (obtener-cifras n)))))
+
+
+### NO FUNCIONA, NO SE POR QUE
+(defn narcissistic?  [n] (= n (apply + (map (partial elevar-a-la-n (count (str n))) (obtener-cifras n)))))
+
+EJ 35)
+
+'((V F F F F)(V V V F V)(V F V V F)(V V F V V)(F F F V F))
+
+a)
+
+(defn contar-V [lista] (first (filter some? (map #(if (= 'V (first %)) (second %) 0) (frequencies lista)))))
+
+(defn matriz-de-V [matriz] (map-indexed (fn [index item] [(inc index) (contar-V item)]) matriz))
+
+(defn filas-max-V [matriz] (map first (second (first (sort-by first > (group-by second (matriz-de-V matriz)))))))
+
+b)
+
+(defn obtener-mayor-ocurr [matriz] (ffirst (sort-by val > (frequencies  matriz))))
+
+(defn comparar-V-F [matriz] (obtener-mayor-ocurr (map obtener-mayor-ocurr matriz)))
+
+
+
+EJ 36)
+
+### ESTE ES DE CLASE, ES SIMPLE
+(defn sublist [lista pos n] (take n (drop (- pos 1) lista) ))		dropea los primeros pos-1 elementos para agarrar desde pos, toma n de lo que queda
+
+
+### ESTE LO HICE YO, ES RECURSIVO
+
+(defn sublist [lista pos n]
+	(cond
+	(empty? lista) "Lista vacía"
+	:else (if (= pos 0) (take n lista) (sublist (rest lista) (- pos 1) n))
+	)
+)
+
+
+EJ 37)
+
+### LAS 2 FUNCIONAN, LA SEGUNDA ME PARECE UN POCO MEJOR PORQUE LA PRIMERA LLAMA 2 VECES A OBTENER-POS-INICIAL
+
+(defn obtener-pos-inicial [lista-a-buscar lista-contenedora] 
+  (first (filter some? (map-indexed #(if (= %2 lista-a-buscar) (inc %1)) (partition (count lista-a-buscar) 1 lista-contenedora))))
+)
+
+(defn pos-inicial [lista-a-buscar lista-contenedora]
+(if (obtener-pos-inicial lista-a-buscar lista-contenedora) (obtener-pos-inicial lista-a-buscar lista-contenedora) 0)
+)
+
+###
+
+(defn obtener-pos-inicial [lista-a-buscar lista-contenedora] 
+ (sort > (set (map-indexed #(if (= %2 lista-a-buscar) (inc %1) 0) (partition (count lista-a-buscar) 1 lista-contenedora))))
+)
+
+(defn pos-inicial [lista-a-buscar lista-contenedora] (first (obtener-pos-inicial lista-a-buscar lista-contenedora)))
+
+
+EJ 38)
+
+(defn distl [a col] (map (partial list a) col))			mapea para generar la lista con el elemento a y cada uno de col, no me cerro el partial
+
+##SOLUCION DE PABLO
+
+(defn distl [dato lista] (map list (repeat (count lista) dato) lista))		genera una lista del tamaño de lista llena del dato, luego con map list genera una lista con cada elemento de lista y la lista creada
+
+### ESTE ES MIO, PRACTICAMENTE ES LO MISMO QUE USAR PARTIAL
+
+(defn distl [dato lista] (map #(list dato %) lista))
+
+
+EJ 39)
+
+(defn obtener-impares [lista] (filter some? (map-indexed #(if (odd? (inc %1)) %2) lista)))
+
+(defn obtener-pares [lista] (filter some? (map-indexed #(if (even? (inc %1)) %2) lista)))
+
+(defn col-par-fil-imp [matriz] (map obtener-pares (obtener-impares matriz)))
+
+
+EJ 40)
+
+(defn obtener-impares [lista] (filter some? (map-indexed #(if (odd? (inc %1)) %2) lista)))
+
+(defn obtener-pares [lista] (filter some? (map-indexed #(if (even? (inc %1)) %2) lista)))
+
+(defn sumar-lista [lista] (apply + (flatten lista)))
+
+(defn dif-sumas [matriz] (- (sumar-lista (obtener-impares matriz)) (sumar-lista (obtener-pares matriz)))) 
+
+
+
+EJ 41)
+
+
+
+
+EJ 42)
+
+
+
+
+EJ 43)
+
+(defn dividir-n-por-menores [n] (map #(= 0 (rem n %)) (range 2 n)))
+
+(defn es-primo? [n] (every? false? (dividir-n-por-menores n)))
+
+### SE USA CON 100 Y SIRVE, SI NO SE QUIERE INCLUIR EL NUMERO SE SACA (inc n) Y LISTO
+
+(defn primos-hasta-n [n] (filter es-primo? (next (range (inc n)))))
+
+
+EJ 44)
+
+(defn get-range [n]
+  (vec (take n (iterate inc 1))))
+
+(defn lista-iota [n] (mapv get-range (get-range n)))
+
+EJ 45)
+
+(defn obt-ganadores [lista] (into #{} (first (transponer lista))))
+
+(defn obt-perdedores [lista] (into #{} (second (transponer lista))))
+
+(defn obt-invictos [lista] (seq (difference (obt-ganadores lista) (obt-perdedores lista))))
+
+EJ 46)
+
+(defn obt-derrotados [lista] (seq (difference (obt-perdedores lista) (obt-ganadores lista))))
+
+
+
+EJ 47)
+
+(map frequencies (transponer '((B R) (I R) (B H) (I H) (H R) (H N)))
+
+
+EJ 48)
+
+"La ruta nos aportó otro paso natural."
+
+(defn string-to-lower [string] (.toLowerCase string))
+
+(defn juntar [string] (apply str string))
+
+(defn quitar-tildes [string] (juntar (replace '{\á \a, \é \e, \í \i, \ó \o, \ú \u} (string-to-lower string))))
+
+(defn separar-por-palabras [string] (re-seq #"\w+" string))
+
+(defn crear-string-letras [string] (juntar (separar-por-palabras (quitar-tildes string))))
+
+(defn palindromo? [string] (= (crear-string-letras string) (crear-string-letras (juntar (reverse string)))))
+
+
+
+EJ 49)
+
+
+
+
+
+EJ 50)
+
+
+
+

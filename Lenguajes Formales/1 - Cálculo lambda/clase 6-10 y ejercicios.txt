@@ -1,0 +1,96 @@
+para la prox (lunes 12-10 a la noche a mas tardar) hacer ejs 3.4 y 3.5
+identificar variables libres y ligadas 
+reducir por ON y OA
+
+entregar a pbergman@fi.uba.com.ar
+3)
+   1)	(λx.((λy.y) x)) z		x,y ligadas, z libre
+
+	(λx.((λy.y) x)) z	
+beta =	(λy.y) z			Normal
+beta =	z
+
+	(λx.((λy.y) x)) z	
+beta =	(λx.x) z			Aplicativo
+beta =	z
+
+
+   2)	(λx.λy.x y) (z y)		x,y ligadas, y,z del parametro ligadas
+
+	(λx.λy.x y) (z y)
+alfa =	(λx.λu.x u) (z y)		Normal y aplicativo
+beta =	(λu (z y) u)
+
+
+   3)	(λx.λy.x) x y			x ligada, x,y libres
+
+	(λx.λy.x) x y	
+beta =	(λy.x) y			Normal y aplicativo
+beta =	y
+
+
+   4)	(λx.((λz.z x) (λx.x))) y				solo y libre, las demas ligadas
+	(λz.z y) (λx.x) 
+	((λx.x) y)
+	y
+
+	(λx.((λz.z x) (λx.x))) y
+	(λx.(λx.x) x) y
+	(λx.x) y
+	y
+
+
+   5) 	(λx.((λy.x y) z)) (λx.x y) 				z libre, ultima y libre
+	(λx.((λu.x u) z)) (λx.x y)
+	((λu.(λx.x y) u) z))
+	(λx.x y) z)							ORDEN NORMAL
+	z y
+
+	(λx.((λy.x y) z)) (λx.x y)
+	(λx.x z) (λx.x y)					ORDEN APLICATIVO
+	(λx.x y)  z)
+	z y
+
+
+   6)	(λy.(λx.(λx.λy.x) x) y) M N			M,N libres
+
+	(λy.(λx.(λx.λy.x) x) y) M N
+beta =	(λx.(λx.λy.x) x) M) N
+beta =	(λx.λy.x) M N					Normal
+beta = λy.M N
+beta = M
+
+	(λy.(λx.(λx.λy.x) x) y) M N
+beta =	λy.(λx.(λy.x) y) M N
+alfa =	λu.(λx.(λy.x) u) M N
+beta =	λu.(λy.u) M N
+beta = λy.M N
+beta =	M
+
+
+   7)	(λx.λy.λx.x y z) (λx.λy.y) M N			solo z libre
+ 
+	(λx.λy.λx.x y z) (λx.λy.y) M N
+beta =	(λy.λx.x y z) M N				Normal y aplicativo
+beta =	(λx.x M z) N
+beta =	N M z
+
+   8)	paja, queda para despues
+
+
+4) a)	C I = (λx.λy.λz.x z y) (λx.x) 
+
+beta =	(λy.λz.(λx.x) z y)
+beta =	λy.λz.z y				LISTO, ES IGUAL A λy z.z y
+
+b)	K I = O		=>	(λx.λy.x) (λx.x) = λx.λy.y
+
+	(λx.λy.x) (λx.x)
+beta =	λy.(λx.x)				LISTO, ES LO MISMO
+
+c)	S (K S) K = B		λx.λy.λz.x z (y z) ((λx.λy.x) (λx.λy.λz.x z (y z)) (λx.λy.x) = λx.λy.λz.x (y z)
+	
+	λx.λy.λz.x z (y z) ((λx.λy.x) (λx.λy.λz.x z (y z)) (λx.λy.x)
+beta =	λx.λy.λz.x z (y z) ((λx.λy.x) (λy.λz.(y z) z ) (λx.λy.x)
+
+
